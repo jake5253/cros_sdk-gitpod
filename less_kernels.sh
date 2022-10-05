@@ -7,4 +7,4 @@ for l in $(grep -n 'src/third_party/kernel' .repo/manifests/snapshot.xml | cut -
 head -n $(( $FIRST - 1 )) .repo/manifests/snapshot.xml > /tmp/mani.fest
 echo $KEEP >> /tmp/mani.fest
 LINESAFTER=$(( $COUNT - $LAST ))
-tail -n $LINESAFTER .repo/manifests/snapshot.xml >> /tmp/mani.fest
+tail -n $(( $LINESAFTER + 1 )) .repo/manifests/snapshot.xml >> /tmp/mani.fest
