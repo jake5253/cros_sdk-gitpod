@@ -1,16 +1,20 @@
 # List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
 tasks:
-  - init: sudo apt-get install git-core gitk git-gui curl lvm2 thin-provisioning-tools python-pkg-resources python3-virtualenv python3-oauth2client xz-utils python3 && \
-     cd /usr/local/bin && \
-     git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git &&
-     echo 'export PATH=/usr/local/bin/depot_tools:$PATH' | tee -a ~/.bashrc && \
-     mkdir -p /usr/local/source/chromiumos && \
-     cd /usr/local/source/chromiumos && \
-     repo init -u https://chromium.googlesource.com/chromiumos/manifest.git --repo-url https://chromium.googlesource.com/external/repo.git -b stable -c --depth=1 && \
-    command: ln -s /usr/local/source/chromiumos /workspace/chromiumos && \
-     cd /workspace/chromiumos && \
-     repo sync -j$(($(nproc) + $(($(nproc) / 2)) )) && \
-     cros_sdk
+  - name: setup
+  - init: |
+      sudo apt-get install git-core gitk git-gui curl lvm2 thin-provisioning-tools python-pkg-resources python3-virtualenv python3-oauth2client xz-utils python3
+      cd /usr/local/bin
+      git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+      export PATH=/usr/local/bin/depot_tools:$PATH
+      mkdir -p /usr/local/source/chromiumos
+      cd /usr/local/source/chromiumos
+      repo init -u https://chromium.googlesource.com/chromiumos/manifest.git --repo-url https://chromium.googlesource.com/external/repo.git -b stable -c --depth=1
+    command: |
+      echo -e 'umask 022\nexport PATH=/usr/local/bin/depot_tools:$PATH' | tee -a ~/.bashrc
+      ln -s /usr/local/source/chromiumos /workspace/chromiumos
+      cd /workspace/chromiumos
+      repo sync -j$(($(nproc) + $(($(nproc) / 2)) ))
+      cros_sdk
 
 # List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
 ports:
