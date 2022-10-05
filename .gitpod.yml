@@ -3,15 +3,17 @@ tasks:
   - name: setup
   - init: |
       sudo apt-get -y install git-core gitk git-gui curl lvm2 thin-provisioning-tools python-pkg-resources python3-virtualenv python3-oauth2client xz-utils python3
-      cd /usr/local/bin
+      sudo mkdir -p /usr/local/chromium
+      sudo chown -R gitpod:gitpod /usr/local/chromium
+      cd /usr/local/chromium
       git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
       export PATH=/usr/local/bin/depot_tools:$PATH
-      mkdir -p /usr/local/source/chromiumos
-      cd /usr/local/source/chromiumos
+      mkdir -p /usr/local/chromium/chromiumos
+      cd /usr/local/chromium/chromiumos
       repo init -u https://chromium.googlesource.com/chromiumos/manifest.git --repo-url https://chromium.googlesource.com/external/repo.git -b stable -c --depth=1
     command: |
-      echo -e 'umask 022\nexport PATH=/usr/local/bin/depot_tools:$PATH' | tee -a ~/.bashrc
-      ln -s /usr/local/source/chromiumos /workspace/chromiumos
+      echo -e 'umask 022\nexport PATH=/usr/local/chromium/depot_tools:$PATH' | tee -a ~/.bashrc
+      ln -s /usr/local/chromium/chromiumos /workspace/chromiumos
       cd /workspace/chromiumos
       repo sync -j$(($(nproc) + $(($(nproc) / 2)) ))
       cros_sdk
